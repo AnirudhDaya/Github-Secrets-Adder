@@ -245,6 +245,7 @@ export async function POST(req: NextRequest) {
     // Process each secret
     const results = [];
     const failedSecrets = [];
+    const successSecrets = [];
     
     for (const [key, value] of Object.entries(secrets)) {
       console.log(`Processing secret: ${key}`);
@@ -254,6 +255,9 @@ export async function POST(req: NextRequest) {
         
         if (!result.success) {
           failedSecrets.push(key);
+        }
+        else{
+          successSecrets.push(key)
         }
         
         results.push({
@@ -277,7 +281,8 @@ export async function POST(req: NextRequest) {
     // Check if all secrets were set successfully
     if (failedSecrets.length === 0) {
       return NextResponse.json({
-        success: true
+        success: true,
+        variables:  successSecrets
       });
     } else {
       return NextResponse.json({
